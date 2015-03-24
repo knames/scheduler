@@ -1,13 +1,32 @@
 <html>
 <head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 	<script>
-		$.ajax({ 
-		   type: "POST",
-		   dataType: "jsonp",
-		   url: "https://www.googleapis.com/calendar/v3/calendars/skedgecanada%40gmail.com/events?sendNotifications=true&maxAttendees=1&key={657523359531-ms2cs81o5m4u20c34kh71bkn1p5l9897.apps.googleusercontent.com}",
-		   success: function(data){        
-     	alert(data);
-   }
+
+
+
+		$.ajax({
+    url: 'https://www.googleapis.com/calendar/v3/calendars/skedgecanada%40gmail.com/events?sendNotifications=true&maxAttendees=1&key={1094059326121-b4n6j8lssql1pk1agr3o1m5phesraimm.apps.googleusercontent.com}',
+    dataType: 'json',
+    type: 'post',
+    contentType: 'application/json',
+    data: JSON.stringify({
+		"end": {
+	  		"date": "2013-03-20",
+	  		"timeZone": "America/Regina"
+	 	},
+	 	"start": {
+	  		"date": "2013-03-18",
+	  		"timeZone": "America/Regina"
+	 	}
+	}),
+    processData: false,
+    success: function( data, textStatus, jQxhr ){
+        $('#response pre').html( JSON.stringify( data ) );
+    },
+    error: function( jqXhr, textStatus, errorThrown ){
+        console.log( errorThrown );
+    }
 });
 	</script>
 </head>
