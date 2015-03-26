@@ -62,6 +62,36 @@ function getUserInfo() {
     });
 } 
 
+
+var daters = [{
+ "end": {
+  "dateTime": "2015-03-26T20:00:00",
+  "timeZone": "America/Regina"
+ },
+ "start": {
+  "timeZone": "America/Regina",
+  "dateTime": "2015-03-26T12:00:00"
+ }
+}]
+
+// THIS DOESNT QUITE WORK YET. NEEDS MORE TINKERIN.
+function makeEvent() {
+    $.ajax({
+    	type: "POST",
+        url: '/calendar/v3/calendars/okenso@gmail.com/events HTTP/1.1',
+        data: JSON.stringify(daters),
+        success: function(response) {
+            console.log('We have gotten info back....');
+            console.log(response);
+            $('#user').html(response.name);
+             
+        },
+        dataType: "STRING"
+    });
+} 
+
+
+
 </script>
 
 
@@ -75,6 +105,7 @@ function getUserInfo() {
 <button type="button" onclick="auth()">auth</button>
 <button type="button" onclick="validateToken()">validateToken</button>
 <button type="button" onclick="getUserInfo()">getUserInfo</button>
+<button type="button" onclick="makeEvent()">event</button>
 
 
 
