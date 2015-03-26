@@ -1,0 +1,107 @@
+<html>
+<head>
+	<script src="https://apis.google.com/js/client.js?onload=OnLoadCallback"></script>
+	<script src="jquery-1.11.2.min.js"></script>
+
+<!--Add a button for the user to click to initiate auth sequence -->
+    <button id="authorize-button" style="visibility: hidden">Authorize</button>
+
+<script type="text/javascript">
+function disconnectUser(access_token) {
+  var revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token=' +
+      access_token;
+
+  // Perform an asynchronous GET request.
+  $.ajax({
+    type: 'GET',
+    url: revokeUrl,
+    async: false,
+    contentType: "application/json",
+    dataType: 'jsonp',
+    success: function(nullResponse) {
+      // Do something now that user is disconnected
+      // The response is always undefined.
+    },
+    error: function(e) {
+      // Handle the error
+      // console.log(e);
+      // You could point users to manually disconnect if unsuccessful
+      // https://plus.google.com/apps
+    }
+  });
+}
+// Could trigger the disconnect on a button click
+$('#revokeButton').click(disconnectUser);
+</script>
+
+
+
+    <script type="text/javascript">
+
+      var clientId = '1094059326121-b4n6j8lssql1pk1agr3o1m5phesraimm.apps.googleusercontent.com';
+
+      var apiKey = 'AIzaSyAdjHPT5Pb7Nu56WJ_nlrMGOAgUAtKjiPM';
+
+      var scopes = 'https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/calendar';
+
+      function handleClientLoad() {
+        // Step 2: Reference the API key
+        gapi.client.setApiKey(apiKey);
+        window.setTimeout(checkAuth,1);
+      }
+
+      function checkAuth() {
+        gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, handleAuthResult);
+      }
+
+      function handleAuthResult(authResult) {
+        var authorizeButton = document.getElementById('authorize-button');
+        if (authResult && !authResult.error) {
+          authorizeButton.style.visibility = 'hidden';
+          makeApiCall();
+        } else {
+          authorizeButton.style.visibility = '';
+          authorizeButton.onclick = handleAuthClick;
+        }
+      }
+
+      function handleAuthClick(event) {
+        // Step 3: get authorization to use private data
+        gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
+        return false;
+      }
+
+      // Load the API and make an API call.  Display the results on the screen.
+      function makeApiCall() {
+        // Step 4: Load the Google+ API
+        gapi.client.load('plus', 'v1').then(function() {
+          // Step 5: Assemble the API request
+          var request = gapi.client.plus.people.get({
+            'userId': 'me'
+          });
+          // Step 6: Execute the API request
+          request.then(function(resp) {
+            var heading = document.createElement('h4');
+            var image = document.createElement('img');
+            image.src = resp.result.image.url;
+            heading.appendChild(image);
+            heading.appendChild(document.createTextNode(resp.result.displayName));
+
+            document.getElementById('content').appendChild(heading);
+          }, function(reason) {
+            console.log('Error: ' + reason.result.error.message);
+          });
+        });
+      }
+    </script>
+    // Step 1: Load JavaScript client library
+    <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+
+</head>
+<body>
+	yo 
+	<input id="clickMe" type="button" value="clickme" onclick="disconnectUser(gapi);" />
+
+
+</body>
+</html>
